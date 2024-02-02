@@ -1,14 +1,15 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // Cursor
-const cursor = {
-	x: 0,
-	y: 0,
-};
-window.addEventListener('mousemove', (e) => {
-	cursor.x = e.clientX / sizes.width - 0.5;
-	cursor.y = e.clientY / sizes.height - 0.5;
-});
+// const cursor = {
+// 	x: 0,
+// 	y: 0,
+// };
+// window.addEventListener('mousemove', (e) => {
+// 	cursor.x = e.clientX / sizes.width - 0.5;
+// 	cursor.y = e.clientY / sizes.height - 0.5;
+// });
 
 /**
  * Base
@@ -39,6 +40,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 );
+
 // const aspectRatio = sizes.width / sizes.height;
 // const camera = new THREE.OrthographicCamera(
 // 	(-1 * sizes.width) / sizes.height,
@@ -54,6 +56,14 @@ camera.position.z = 3;
 camera.lookAt(mesh.position);
 scene.add(camera);
 
+// Controls
+const controls = new OrbitControls(camera, canvas);
+// Enabling damping for the controls
+controls.enableDamping = true;
+// Changing the focus point of the controls
+// controls.target.y = 1;
+// controls.update();
+
 // Renderer
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
@@ -67,18 +77,21 @@ const tick = () => {
 	const elapsedTime = clock.getElapsedTime();
 
 	// Update camera. This allows us to make a full rotation.
-	camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
-	camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-	camera.position.y = cursor.y * 5;
-	// We have to negate the y value because the y axis is inverted in three.js
-	// when compared to the cursor.y axis.
-	camera.position.y = -cursor.y * 3;
+	// camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+	// camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+	// camera.position.y = cursor.y * 5;
+	// // We have to negate the y value because the y axis is inverted in three.js
+	// // when compared to the cursor.y axis.
+	// camera.position.y = -cursor.y * 3;
 
-	// Making the camera look at the mesh
-	camera.lookAt(mesh.position);
+	// // Making the camera look at the mesh
+	// camera.lookAt(mesh.position);
 
 	// Update objects
 	// mesh.rotation.y = elapsedTime;
+
+	// This will update the controls, making the damping effect work
+	controls.update();
 
 	// Render
 	renderer.render(scene, camera);
